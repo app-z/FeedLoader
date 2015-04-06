@@ -4,6 +4,7 @@ Volley FeedLoader
 This is aproach how parse Json feed for Fragment in one line. There is only 4 files witch you should include in project. Use package net.appz.feedloader;
 
 How to use<br>
+
 Json file on local server http://192.168.1.103/shop.json
 ```
 {
@@ -17,13 +18,7 @@ Json file on local server http://192.168.1.103/shop.json
 Data class
 ```
 public class GoodsItem {
-    public String getName() {
-        return name;
-    }
     private String name;
-    public float getPrice() {
-        return price;
-    }
     private float price;
 }
 ```
@@ -54,5 +49,64 @@ Sample of use
             }
         }).start(LOADER_GOODS_ID, this);
 ```
+
+Json file on local server http://192.168.1.103/shop1.json
+```
+[
+{"name":"Samsung","price":51200.6},
+{"name":"Lg","price":5400.6},
+{"name":"Alcatel","price":4500.6},
+{"name":"iPhone","price":4800.3},
+{"name":"iPad","price":2850.1}
+]
+```
+Data class is the same
+```
+public class GoodsItem {
+    public String getName() {
+        return name;
+    }
+    private String name;
+    public float getPrice() {
+        return price;
+    }
+    private float price;
+}
+```
+Sample of use
+```
+    String url1 = "http://192.168.1.103/shop1.json";
+    private static final int LOADER_GOODS_ID_1 = 2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        FeedLoader.with(this).addLoader(LOADER_GOODS_ID_1,
+                url1,
+                GoodsItem[].class,
+                new DispatcherData.Listener<GoodsItem[]>() {
+                    @Override
+                    public void onResponse(int loaderId, GoodsItem[] goodsItems) {
+                        Log.d(TAG, " Items : " + goodsItems.getClass() + goodsItems );
+                        for (GoodsItem goodsItem : goodsItems){
+                            Log.d(TAG, "Loader " + loaderId + " : " + goodsItem.getName() + " : " + goodsItem.getPrice());
+                        }
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError data) {
+
+                    }
+                }).start(LOADER_GOODS_ID_1, this);
+
+```
+
+
+
+
+
+
 
 Copyright (c) 2015 Appz (http://app-z.net)
