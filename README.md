@@ -126,7 +126,6 @@ For add Fragment use Handler
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.addToBackStack(null);
                 ft.commit();
-            
             });
         }
     }
