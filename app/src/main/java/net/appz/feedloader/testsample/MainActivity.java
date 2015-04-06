@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
                 new DispatcherData.Listener<GoodsItem[]>() {
                     @Override
                     public void onResponse(int loaderId, GoodsItem[] goodsItems) {
-                        Log.d(TAG, " Items . " + goodsItems.getClass() + goodsItems );
+                        Log.d(TAG, " Items : " + goodsItems.getClass() + goodsItems );
                         for (GoodsItem goodsItem : goodsItems){
                             Log.d(TAG, "Loader " + loaderId + " : " + goodsItem.getName() + " : " + goodsItem.getPrice());
                         }
