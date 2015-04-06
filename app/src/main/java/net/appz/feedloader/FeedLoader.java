@@ -20,7 +20,7 @@ public class FeedLoader {
     private DispatcherData dispatcherData = new DispatcherData();
 
     public FeedLoader(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     LoaderManager.LoaderCallbacks<Object> callback = new LoaderManager.LoaderCallbacks<Object>() {
@@ -50,11 +50,11 @@ public class FeedLoader {
         return singleton;
     }
 
-    public void start(int loaderId, final Context context) {
+    public void start(int loaderId, final FragmentActivity context) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("dispatcherData", dispatcherData);
-
-        ((FragmentActivity)context).getSupportLoaderManager().
+        assert context instanceof FragmentActivity : "Run possible only from FragmentActivity";
+        context.getSupportLoaderManager().
                 restartLoader(loaderId, bundle, callback);
     }
 
