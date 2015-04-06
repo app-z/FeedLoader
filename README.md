@@ -113,8 +113,9 @@ Sample of use
 Note:
 For add Fragment use Handler
 ```
+   ...
    @Override
-   public void onResponse(int loaderId, GoodsItem[] goodsItems) {
+   public void onResponse(int loaderId, Icons icons) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
