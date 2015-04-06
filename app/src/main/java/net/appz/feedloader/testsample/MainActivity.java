@@ -10,7 +10,6 @@ import com.android.volley.VolleyError;
 
 import net.appz.feedloader.DispatcherData;
 import net.appz.feedloader.FeedLoader;
-import net.appz.feedloader.GoodsItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

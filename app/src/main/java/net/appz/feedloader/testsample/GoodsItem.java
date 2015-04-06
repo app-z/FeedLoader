@@ -1,4 +1,4 @@
-package net.appz.feedloader;
+package net.appz.feedloader.testsample;
 
 /**
  * Created by App-z.net on 21.03.15.
