@@ -49,7 +49,7 @@ Sample of use
             }
         }).start(LOADER_GOODS_ID, this);
 ```
-
+<br>
 Json file on local server http://192.168.1.103/shop1.json
 ```
 [
@@ -89,7 +89,6 @@ Sample of use
                 new DispatcherData.Listener<GoodsItem[]>() {
                     @Override
                     public void onResponse(int loaderId, GoodsItem[] goodsItems) {
-                        Log.d(TAG, " Items : " + goodsItems.getClass() + goodsItems );
                         for (GoodsItem goodsItem : goodsItems){
                             Log.d(TAG, "Loader " + loaderId + " : " + goodsItem.getName() + " : " + goodsItem.getPrice());
                         }
