@@ -109,6 +109,28 @@ Sample of use
                 }).start(LOADER_GOODS_ID_1, this);
 
 ```
+<br>
+Note:
+For add Fragment use Handler
+```
+   @Override
+   public void onResponse(int loaderId, GoodsItem[] goodsItems) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // Here you fragment operation
+                Fragment iconsGridFragment = IconsGridFragment.newInstance(icons);
+                // Add the fragment to the activity, pushing this transaction on to the back stack.
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, iconsGridFragment, IconsGridFragment.class.getSimpleName());
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.addToBackStack(null);
+                ft.commit();
+            
+            });
+        }
+    }
+```
 
 
 
