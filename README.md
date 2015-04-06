@@ -53,3 +53,6 @@ Sample of use
                 Log.d(TAG , "onErrorResponse :" + data);
             }
         }).start(LOADER_GOODS_ID, this);
+```
+
+Copyright (c) 2015 Appz (http://app-z.net)
