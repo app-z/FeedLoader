@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity {
         }).start(LOADER_GOODS_ID, this);
 
 
+
         FeedLoader.with(this).addLoader(LOADER_GOODS_ID_1,
                 url1,
                 GoodsItem[].class,
