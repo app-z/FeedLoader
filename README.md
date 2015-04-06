@@ -1,7 +1,7 @@
 # FeedLoader
 Volley FeedLoader
 
-This is aproach how parse Json feed for Fragment in one line. There is only 4 files witch you should include in project. Use package net.appz.feedloader;
+This is approach how to parse Json feed for Fragment in one line. There is only 4 files witch you should include in your project. Use package net.appz.feedloader;
 
 How to use<br>
 
