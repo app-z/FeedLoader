@@ -3,8 +3,8 @@ Volley FeedLoader
 
 This is aproach how parse Json feed for Fragment in one line. There is only 4 files witch you should include in project. Use package net.appz.feedloader;
 
-How to use
-Json
+How to use<br>
+Json file on local server http://192.168.1.103/shop.json
 ```
 {
 "1":{"name":"Samsung","price":51200.6},
