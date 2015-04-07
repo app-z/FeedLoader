@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.android.volley.Response;
 
@@ -41,7 +42,7 @@ public class FeedLoader {
 
         @Override
         public void onLoaderReset(Loader<Response<Object>> loader) {
-
+            if( DEBUG ) Log.d(TAG, "onLoaderReset :" + loader.getId());
         }
     };
 
@@ -63,7 +64,7 @@ public class FeedLoader {
                 restartLoader(loaderId, bundle, callback);
     }
 
-    public void stop(int loaderId, final FragmentActivity activity) {
+    public void destroy(int loaderId, final FragmentActivity activity) {
         assert activity instanceof FragmentActivity : "Run possible only from FragmentActivity";
         activity.getSupportLoaderManager().destroyLoader(loaderId);
     }

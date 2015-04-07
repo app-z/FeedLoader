@@ -99,9 +99,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onStop(){
         super.onStop();
-        FeedLoader.with(this).stop(LOADER_GOODS_ID, this);
-        FeedLoader.with(this).stop(LOADER_GOODS_ID_1, this);
-        FeedLoader.with(this).stop(LOADER_GOODS_ID_2, this);
+         FeedLoader.with(this).destroy(LOADER_GOODS_ID, this);
+        // FeedLoader.with(this).stop(LOADER_GOODS_ID_1, this);
+        // FeedLoader.with(this).stop(LOADER_GOODS_ID_2, this);
     }
 
     @Override

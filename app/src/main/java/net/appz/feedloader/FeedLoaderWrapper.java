@@ -117,7 +117,6 @@ class FeedLoaderWrapper<D> extends Loader<Response<D>> {
     @Override
     protected void onReset() {
         if (DEBUG) Log.i(TAG, "Loader onReset()");
-        onStopLoading();
         requestQueue.cancelAll(this);
         super.onReset();
     }
