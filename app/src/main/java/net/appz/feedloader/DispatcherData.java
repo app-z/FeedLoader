@@ -13,9 +13,18 @@ import java.util.HashMap;
 public class DispatcherData implements Parcelable {
     HashMap<Integer, Class> loaderClazzMap = new HashMap<>();
     HashMap<Integer, Listener> callBackMap = new HashMap<>();
-    HashMap<Integer, String> urlFeeds = new HashMap<>();
+    private HashMap<Integer, String> urlFeeds = new HashMap<>();
 
     public DispatcherData(){}
+
+
+    String getUrlFeed(int loaderId){
+        return urlFeeds.get(loaderId);
+    }
+
+    void putUrlFeed(int loaderId, String url){
+        urlFeeds.put(loaderId, url);
+    }
 
     protected DispatcherData(Parcel in) {
         loaderClazzMap = (HashMap) in.readValue(HashMap.class.getClassLoader());

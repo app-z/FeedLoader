@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.android.volley.Response;
+
 /**
  * Created by App-z.net on 04.04.15.
  */
@@ -23,19 +25,22 @@ public class FeedLoader {
         this.context = context.getApplicationContext();
     }
 
-    LoaderManager.LoaderCallbacks<Object> callback = new LoaderManager.LoaderCallbacks<Object>() {
+    LoaderManager.LoaderCallbacks<Response<Object>> callback = new LoaderManager.LoaderCallbacks<Response<Object>>() {
         @Override
-        public Loader<Object> onCreateLoader(int id, Bundle args) {
+        public Loader<Response<Object>> onCreateLoader(int id, Bundle args) {
             return new FeedLoaderWrapper(context , args);
         }
 
         @Override
-        public void onLoadFinished(Loader<Object> loader, Object data) {
-            dispatcherData.callBackMap.get(loader.getId()).onResponse(loader.getId(), data);
+        public void onLoadFinished(Loader<Response<Object>> loader, Response<Object> data) {
+            if( data.isSuccess() )
+                dispatcherData.callBackMap.get(loader.getId()).onResponse(loader.getId(), data.result);
+            else
+                dispatcherData.callBackMap.get(loader.getId()).onErrorResponse(data.error);
         }
 
         @Override
-        public void onLoaderReset(Loader<Object> loader) {
+        public void onLoaderReset(Loader<Response<Object>> loader) {
 
         }
     };
@@ -46,20 +51,21 @@ public class FeedLoader {
                                 DispatcherData.Listener callback){
         dispatcherData.loaderClazzMap.put(loaderId, loaderClazz);
         dispatcherData.callBackMap.put(loaderId, callback);
-        dispatcherData.urlFeeds.put(loaderId, url);
+        dispatcherData.putUrlFeed(loaderId, url);
         return singleton;
     }
 
-    public void start(int loaderId, final FragmentActivity context) {
+    public void start(int loaderId, final FragmentActivity activity) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("dispatcherData", dispatcherData);
-        assert context instanceof FragmentActivity : "Run possible only from FragmentActivity";
-        context.getSupportLoaderManager().
+        assert activity instanceof FragmentActivity : "Run possible only from FragmentActivity";
+        activity.getSupportLoaderManager().
                 restartLoader(loaderId, bundle, callback);
     }
 
-    public void stop(int loaderId, final Context context) {
-        ((FragmentActivity)context).getSupportLoaderManager().destroyLoader(loaderId);
+    public void stop(int loaderId, final FragmentActivity activity) {
+        assert activity instanceof FragmentActivity : "Run possible only from FragmentActivity";
+        activity.getSupportLoaderManager().destroyLoader(loaderId);
     }
 
     public static FeedLoader with(Context context) {

@@ -14,13 +14,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+
+//http://www.androiddesignpatterns.com/2012/08/implementing-loaders.html
+
 /**
  *
  *
  *
  * @param <D>
  */
-class FeedLoaderWrapper<D> extends Loader<D> {
+class FeedLoaderWrapper<D> extends Loader<Response<D>> {
 
     private boolean DEBUG = true;
     private String TAG = getClass().getSimpleName();
@@ -28,6 +31,8 @@ class FeedLoaderWrapper<D> extends Loader<D> {
     private DispatcherData dispatcherData;
 
     private RequestQueue requestQueue;
+
+    private Response<D> mCachedResponse;
 
     /**
      * Stores away the application context associated with context.
@@ -47,31 +52,55 @@ class FeedLoaderWrapper<D> extends Loader<D> {
         onContentChanged();
     }
 
+
     /**
      * Get Data
      */
     private void doRequest(Class<?> clazz) {
-        String urlFeed = dispatcherData.urlFeeds.get(getId());
+        final String urlFeed = dispatcherData.getUrlFeed(getId());
         final GsonRequest gsonRequest = new GsonRequest(urlFeed,
                 clazz,
                 null,
                 new Response.Listener<D>() {
                     @Override
                     public void onResponse(D data) {
-                        deliverResult(data);
+                        mCachedResponse = Response.success(data, null);
+                        deliverResult(mCachedResponse);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if (volleyError != null)
-                    //deliverResult(null);
-                    if (DEBUG) Log.e(TAG, "volleyError: " + volleyError.getMessage());
-                dispatcherData.callBackMap.get(getId()).onErrorResponse(volleyError);
+                mCachedResponse = Response.error(volleyError);
+                deliverResult(mCachedResponse);
             }
         });
         requestQueue.add(gsonRequest);
     }
 
+
+    @Override
+    public void deliverResult(Response<D> data) {
+        if (isReset()) {
+            // The Loader has been reset; ignore the result and invalidate the data.
+            //releaseResources(data);
+            if (DEBUG) Log.i(TAG, "Loader deliverResult() isReset()");
+            return;
+        }
+
+        // Hold a reference to the old data so it doesn't get garbage collected.
+        // We must protect it until the new data has been delivered.
+        Response<D> oldData = mCachedResponse;
+        mCachedResponse = data;
+
+        if (isStarted()) {
+            // If the Loader is in a started state, deliver the results to the
+            // client. The superclass method does this for us.
+            super.deliverResult(data);
+            if (DEBUG) Log.i(TAG, "Loader deliverResult() isStarted()");
+        }
+
+        if (DEBUG) Log.i(TAG, "Loader deliverResult()");
+    }
     @Override
     protected void onStartLoading() {
         if (takeContentChanged())
@@ -88,6 +117,7 @@ class FeedLoaderWrapper<D> extends Loader<D> {
     @Override
     protected void onReset() {
         if (DEBUG) Log.i(TAG, "Loader onReset()");
+        onStopLoading();
         requestQueue.cancelAll(this);
         super.onReset();
     }
@@ -96,7 +126,7 @@ class FeedLoaderWrapper<D> extends Loader<D> {
     public void onForceLoad() {
         super.onForceLoad();
 
-        String urlFeed = dispatcherData.urlFeeds.get(getId());
+        String urlFeed = dispatcherData.getUrlFeed(getId());
         if (DEBUG) Log.d(TAG, "Loader onForceLoad() : feedUrl = " + urlFeed);
         doRequest(dispatcherData.loaderClazzMap.get(getId()));
     }

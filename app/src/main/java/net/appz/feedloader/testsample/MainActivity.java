@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError data) {
-
+                        Log.d(TAG, "onErrorResponse :" + data);
                     }
                 }).start(LOADER_GOODS_ID_1, this);
 
@@ -100,6 +100,7 @@ public class MainActivity extends ActionBarActivity {
     public void onStop(){
         super.onStop();
         FeedLoader.with(this).stop(LOADER_GOODS_ID, this);
+        FeedLoader.with(this).stop(LOADER_GOODS_ID_1, this);
         FeedLoader.with(this).stop(LOADER_GOODS_ID_2, this);
     }
 
