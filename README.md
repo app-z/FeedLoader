@@ -131,11 +131,19 @@ For add Fragment use Handler
         }
     }
 ```
+<br>
+Use cache was added<br>
+```
+public FeedLoader useCache(int loaderId);
+```
+Use it as follow
+```
+...
+}).useCache(LOADER_GOODS_ID).start(LOADER_GOODS_ID, this);
+```
 
 
 
 
-
-
-
+<br>
 Copyright (c) 2015 Appz (http://app-z.net)
