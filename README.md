@@ -55,7 +55,7 @@ Sample of use
             public void onErrorResponse(VolleyError data) {
                 Log.d(TAG , "onErrorResponse :" + data);
             }
-        }).start(LOADER_GOODS_ID, this);
+        }).useCache(LOADER_GOODS_ID).start(LOADER_GOODS_ID, this);
 ```
 <br>
 Json file on local server http://192.168.1.103/shop1.json
