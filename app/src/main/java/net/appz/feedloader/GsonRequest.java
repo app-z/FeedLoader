@@ -1,6 +1,7 @@
 package net.appz.feedloader;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -20,7 +21,7 @@ public class GsonRequest<T> extends Request<T> {
     private final Class<T> clazz;
     private final Map<String, String> headers;
     private final Response.Listener<T> listener;
-
+    private boolean useCache = false;
     /**
      * Make a GET request and return a parsed object from JSON.
      *
@@ -28,12 +29,13 @@ public class GsonRequest<T> extends Request<T> {
      * @param clazz Relevant class object, for Gson's reflection
      * @param headers Map of request headers
      */
-    public GsonRequest(String url, Class<T> clazz, Map<String, String> headers,
-                       Response.Listener<T> listener, Response.ErrorListener errorListener) {
+    public GsonRequest(String url, Class<T> clazz, Map<String, String> headers, boolean useCache,
+                       Response.Listener<T> listener, Response.ErrorListener errorListener ) {
         super(Method.GET, url, errorListener);
         this.clazz = clazz;
         this.headers = headers;
         this.listener = listener;
+        this.useCache = useCache;
     }
 
     @Override
@@ -54,11 +56,51 @@ public class GsonRequest<T> extends Request<T> {
                     HttpHeaderParser.parseCharset(response.headers));
             return Response.success(
                     gson.fromJson(json, clazz),
-                    HttpHeaderParser.parseCacheHeaders(response));
+                    useCache ?
+                            parseIgnoreCacheHeaders(response) :
+                            HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
             return Response.error(new ParseError(e));
         }
     }
+
+    /**
+     * Extracts a {@link Cache.Entry} from a {@link NetworkResponse}.
+     * Cache-control headers are ignored. SoftTtl == 3 mins, ttl == 24 hours.
+     * @param response The network response to parse headers from
+     * @return a cache entry for the given response, or null if the response is not cacheable.
+     */
+    public static Cache.Entry parseIgnoreCacheHeaders(NetworkResponse response) {
+        long now = System.currentTimeMillis();
+
+        Map<String, String> headers = response.headers;
+        long serverDate = 0;
+        String serverEtag = null;
+        String headerValue;
+
+        headerValue = headers.get("Date");
+        if (headerValue != null) {
+            serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+        }
+
+        serverEtag = headers.get("ETag");
+
+        final long cacheHitButRefreshed = 1 * 60 * 1000; // in 1 minutes cache will be hit, but also refreshed on background
+        final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
+        final long softExpire = now + cacheHitButRefreshed;
+        final long ttl = now + cacheExpired;
+
+        Cache.Entry entry = new Cache.Entry();
+        entry.data = response.data;
+        entry.etag = serverEtag;
+        entry.softTtl = softExpire;
+        entry.ttl = ttl;
+        entry.serverDate = serverDate;
+        entry.responseHeaders = headers;
+
+        return entry;
+    }
+
 }

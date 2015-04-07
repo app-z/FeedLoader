@@ -53,6 +53,7 @@ public class FeedLoader {
         dispatcherData.putLoaderClazz(loaderId, loaderClazz);
         dispatcherData.putCallBack(loaderId, callback);
         dispatcherData.putUrlFeed(loaderId, url);
+        dispatcherData.putUseCache(loaderId, false);    // default
         return singleton;
     }
 
@@ -77,6 +78,11 @@ public class FeedLoader {
                 }
             }
         }
+        return singleton;
+    }
+
+    public FeedLoader useCache(int loaderId) {
+        dispatcherData.putUseCache(loaderId, true);
         return singleton;
     }
 }

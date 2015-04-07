@@ -14,9 +14,18 @@ public class DispatcherData implements Parcelable {
     private HashMap<Integer, Class> loaderClazzMap = new HashMap<>();
     private HashMap<Integer, Listener> callBackMap = new HashMap<>();
     private HashMap<Integer, String> urlFeeds = new HashMap<>();
+    private HashMap<Integer, Boolean> useCache = new HashMap<>();
+
 
     public DispatcherData(){}
 
+    void putUseCache(int loaderId, boolean cache){
+        useCache.put(loaderId, cache);
+    }
+
+    boolean getUseCache(int loaderId){
+        return useCache.get(loaderId);
+    }
 
     void putCallBack(int loaderId, Listener callback){
         callBackMap.put(loaderId, callback);
@@ -44,6 +53,7 @@ public class DispatcherData implements Parcelable {
     }
 
     protected DispatcherData(Parcel in) {
+        useCache = (HashMap) in.readValue(HashMap.class.getClassLoader());
         loaderClazzMap = (HashMap) in.readValue(HashMap.class.getClassLoader());
         callBackMap = (HashMap) in.readValue(HashMap.class.getClassLoader());
         urlFeeds = (HashMap) in.readValue(HashMap.class.getClassLoader());
@@ -56,6 +66,7 @@ public class DispatcherData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(useCache);
         dest.writeValue(loaderClazzMap);
         dest.writeValue(callBackMap);
         dest.writeValue(urlFeeds);

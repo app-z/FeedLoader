@@ -57,10 +57,14 @@ class FeedLoaderWrapper<D> extends Loader<Response<D>> {
      * Get Data
      */
     private void doRequest(Class<?> clazz) {
+        final boolean useCache = dispatcherData.getUseCache(getId());
+        if (DEBUG) Log.i(TAG, "useCache : " + getId() + " : " + useCache);
         final String urlFeed = dispatcherData.getUrlFeed(getId());
+        if ( !useCache )
+            requestQueue.getCache().remove(urlFeed);
         final GsonRequest gsonRequest = new GsonRequest(urlFeed,
                 clazz,
-                null,
+                null, useCache,
                 new Response.Listener<D>() {
                     @Override
                     public void onResponse(D data) {

@@ -11,7 +11,6 @@ import com.android.volley.VolleyError;
 import net.appz.feedloader.DispatcherData;
 import net.appz.feedloader.FeedLoader;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ public class MainActivity extends ActionBarActivity {
 
     Map<Integer, GoodsItem> mGoodsMap = new HashMap<>();
 
-    ArrayList<GoodsItem> mGoodsList = new ArrayList<GoodsItem>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError data) {
                 Log.d(TAG , "onErrorResponse :" + data);
             }
-        }).start(LOADER_GOODS_ID, this);
+        }).useCache(LOADER_GOODS_ID).start(LOADER_GOODS_ID, this);
 
 
 
