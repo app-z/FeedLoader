@@ -128,6 +128,6 @@ class FeedLoaderWrapper<D> extends Loader<Response<D>> {
 
         String urlFeed = dispatcherData.getUrlFeed(getId());
         if (DEBUG) Log.d(TAG, "Loader onForceLoad() : feedUrl = " + urlFeed);
-        doRequest(dispatcherData.loaderClazzMap.get(getId()));
+        doRequest(dispatcherData.getLoaderClazz(getId()));
     }
 }

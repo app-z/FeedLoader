@@ -34,9 +34,9 @@ public class FeedLoader {
         @Override
         public void onLoadFinished(Loader<Response<Object>> loader, Response<Object> data) {
             if( data.isSuccess() )
-                dispatcherData.callBackMap.get(loader.getId()).onResponse(loader.getId(), data.result);
+                dispatcherData.getCallBack(loader.getId()).onResponse(loader.getId(), data.result);
             else
-                dispatcherData.callBackMap.get(loader.getId()).onErrorResponse(data.error);
+                dispatcherData.getCallBack(loader.getId()).onErrorResponse(data.error);
         }
 
         @Override
@@ -49,8 +49,8 @@ public class FeedLoader {
                                 String url,
                                 Class<?> loaderClazz,
                                 DispatcherData.Listener callback){
-        dispatcherData.loaderClazzMap.put(loaderId, loaderClazz);
-        dispatcherData.callBackMap.put(loaderId, callback);
+        dispatcherData.putLoaderClazz(loaderId, loaderClazz);
+        dispatcherData.putCallBack(loaderId, callback);
         dispatcherData.putUrlFeed(loaderId, url);
         return singleton;
     }

@@ -11,12 +11,20 @@ import java.util.HashMap;
  * Created by App-z.net on 05.04.15.
  */
 public class DispatcherData implements Parcelable {
-    HashMap<Integer, Class> loaderClazzMap = new HashMap<>();
-    HashMap<Integer, Listener> callBackMap = new HashMap<>();
+    private HashMap<Integer, Class> loaderClazzMap = new HashMap<>();
+    private HashMap<Integer, Listener> callBackMap = new HashMap<>();
     private HashMap<Integer, String> urlFeeds = new HashMap<>();
 
     public DispatcherData(){}
 
+
+    void putCallBack(int loaderId, Listener callback){
+        callBackMap.put(loaderId, callback);
+    }
+
+    Listener getCallBack(int loaderId){
+        return callBackMap.get(loaderId);
+    }
 
     String getUrlFeed(int loaderId){
         return urlFeeds.get(loaderId);
@@ -24,6 +32,15 @@ public class DispatcherData implements Parcelable {
 
     void putUrlFeed(int loaderId, String url){
         urlFeeds.put(loaderId, url);
+    }
+
+
+    Class getLoaderClazz(int loaderId){
+        return loaderClazzMap.get(loaderId);
+    }
+
+    void putLoaderClazz(int loaderId, Class loaderClazz){
+        loaderClazzMap.put(loaderId, loaderClazz);
     }
 
     protected DispatcherData(Parcel in) {
